@@ -26,6 +26,9 @@ jobs:
     - uses: actions/setup-go@v3.2.0  # 指定golang环境安装好
     - with:
         go-version: go1.18.3 windows/amd64
+    - run: go build -v ./...
+    - run: go test -v ./...
+      
     
     
   
