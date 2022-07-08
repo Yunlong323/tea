@@ -3,8 +3,8 @@ on:
   push:
     branches:
       - main
-    paths:
-      - src/*
+#     paths:
+#       - src/*
     #仅仅main分支下src下的目录改动后 push 才会触发
   #schedule定时任务（cron），和push冲突，会使push失效
   
