@@ -1,6 +1,8 @@
 name: evaluate # 模板名
 kind: template
 
+# cuelang (methods:golang refer the package to  def struct and restriction)
+
 classification:
   - type: client
   # running阶段依次执行命令
