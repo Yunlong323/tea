@@ -1,0 +1,62 @@
+# yaml模板示例
+name: default   # 名称
+kind: pipeline  # 类型
+nodes:          # 容器部署节点
+  - name: xingye bank
+    socket: 1.2.3.4:7788
+  - name: electricity company
+    socket: 1.2.5.6:7788
+# 任务编排
+steps:
+  # 步骤名
+  - name: step1
+    # 一个步骤所包含的任务群
+    works:
+      # 任务所使用的模板
+      - template: tmp1 name1
+        # 任务名
+        name: task1/1
+        # 任务描述
+        description: a simple task
+        # 任务所需的参数
+        parameters:
+          - name: v1
+            type: int
+          - name: v2
+            type: string
+        deployment:
+          client: electricity company  # 服务使用方
+          server: xingye bank          # 服务提供方
+        serving: true
+      - template: tmp1 name2
+        name: task1/2
+        description: a simple task
+        parameters:
+          - name: v3
+            type: int
+        deployment:
+          client: xingye bank
+        # 当前任务所依赖的其他任务
+        dependencies:
+          # 外部依赖的任务
+          - dependency: another_task # 只支持internal
+        serving: true
+  - name: step2
+    works:
+      - template: tmp1 name3
+        name: task2/1
+        description: a simple task
+        parameters:
+          - name: v4
+            type: string
+        # 仍在线的任务，其余任务全部自动下线
+        serving: true
+      - template: tmp1 name4
+        name: task2/2
+        description: a simple task
+        parameters:
+          - name: v5
+            type: int
+        dependencies:
+          # 内部依赖的任务
+          - dependency: task1/1

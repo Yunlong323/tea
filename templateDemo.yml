@@ -1,0 +1,44 @@
+name: evaluate # 模板名
+kind: template
+
+classification:
+  - type: client
+  # running阶段依次执行命令
+    task:
+      args:
+        - name: EmployeeInfoPath
+          type: string
+      cmd:
+        - python getEmployeeInfo.py EmployeeInfoPath # 获取模型的操作放在service中，因为service的启动很严格。必须等待server端把model传过来才可启动service
+    service:
+      entry:                      # 使用命令行起一个serviceA
+        - java -jar evaluation.jar     # 起一个Java的service
+      api:                      # service提供的具体接口列表
+        - name: getQualifiedEmployee        # 接口名
+          url: "/api/getQualifiedEmployee"  # 接口url
+          args:
+            - name: database # 员工的信息都存在一个DB中
+              type: string
+            - name: modelFileName # 训练模型的文件名
+              type: string
+            - name: outputFormat
+              type: string # csv,txt,xlsx,sql
+          return:               # 返回值
+            - name: employeeId
+              type: list[int] # dapr 类型
+    nodes:
+      - name: XingYe
+        socket: 121.192.123.66:8083
+
+  - type: server
+    task:
+      args:
+        - name: ModelPath
+          type: string
+        - name: TargetPath
+          type: string
+      cmd:
+        - python getEvaluateModel.py ModelPath TargetPath # 把模型从modelpath传到targetPath
+    nodes:
+      - name: Company
+        socket: 121.192.13.66:8083
