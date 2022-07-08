@@ -1,0 +1,36 @@
+name: MyCI
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - src/*
+    #仅仅main分支下src下的目录改动后 push 才会触发
+  #schedule定时任务（cron），和push冲突，会使push失效
+  
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    name: printHelloWorld
+    steps:
+    - name: download your code   #name当然可写可不写
+      uses: actions/checkout@v1      # uses参数，指定另一个代码仓库，actions账号下的checkout仓库的v1版本（把代码下载下来）（git clone） 
+    - name: exe
+      run: echo hello      #运行shell命令 run
+    
+  job2: #运行node环境
+    name: AfterJob1ExecNode
+    needs: job1
+    steps:
+    - uses: actions/checkout@v1   # 把当前的代码copy下来
+    - uses: actions/setup-go@v3.2.0  # 指定golang环境安装好
+    - with:
+        go-version: go1.18.3 windows/amd64
+    
+    
+  
+  
+  
+  
+
+
