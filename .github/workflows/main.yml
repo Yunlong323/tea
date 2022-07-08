@@ -18,7 +18,8 @@ jobs:
     - name: exe
       run: echo hello      #运行shell命令 run
     
-  job2: #运行node环境
+  job2: 
+    runs-on: ubuntu-latest
     name: AfterJob1ExecNode
     needs: job1
     steps:
